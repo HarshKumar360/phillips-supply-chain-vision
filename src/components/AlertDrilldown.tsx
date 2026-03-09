@@ -924,11 +924,9 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                 <div>
                   <h4 className="font-medium text-foreground mb-3">Cost Breakdown</h4>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span className="text-muted-foreground">Supplier qualification</span><span className="font-medium">€1.8M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Regulatory fast-track</span><span className="font-medium">€0.9M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Logistics setup</span><span className="font-medium">€0.6M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Quality validation</span><span className="font-medium">€0.8M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Contingency (10%)</span><span className="font-medium">€0.4M</span></div>
+                    {contextData.costBreakdown.map((item, idx) => (
+                      <div key={idx} className="flex justify-between"><span className="text-muted-foreground">{item.label}</span><span className="font-medium">{item.amount}</span></div>
+                    ))}
                     <Separator />
                     <div className="flex justify-between font-bold"><span>Total</span><span>€{recommendedStrategy.cost}M</span></div>
                   </div>
