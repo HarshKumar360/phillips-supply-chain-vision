@@ -85,15 +85,24 @@ const Index = () => {
     }
   ];
 
+  const isSuezAlert = selectedAlert?.title?.includes("Suez");
+
   if (selectedAlert) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <main className="p-6">
-          <AlertDrilldown 
-            alert={selectedAlert} 
-            onBack={() => setSelectedAlert(null)} 
-          />
+          {isSuezAlert ? (
+            <SuezRoutingDrilldown 
+              alert={selectedAlert} 
+              onBack={() => setSelectedAlert(null)} 
+            />
+          ) : (
+            <AlertDrilldown 
+              alert={selectedAlert} 
+              onBack={() => setSelectedAlert(null)} 
+            />
+          )}
         </main>
       </div>
     );
