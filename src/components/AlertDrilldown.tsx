@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { getAlertContextData } from "@/data/alertContextualData";
+import type { StrategyOption } from "@/data/alertContextualData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,128 +43,20 @@ interface AlertDrilldownProps {
   onBack: () => void;
 }
 
-interface StrategyOption {
-  id: string;
-  name: string;
-  description: string;
-  cost: number;
-  timeline: string;
-  riskReduction: number;
-  revenueProtection: number;
-  feasibility: "HIGH" | "MEDIUM" | "LOW";
-  pros: string[];
-  cons: string[];
-}
 
 const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
   const [selectedStrategies, setSelectedStrategies] = useState<string[]>([]);
   const [simulationResults, setSimulationResults] = useState<any[]>([]);
 
-  const strategyOptions: StrategyOption[] = [
-    {
-      id: "alternative-sourcing",
-      name: "Alternative Sourcing",
-      description: "Qualify and onboard backup suppliers from different geographies",
-      cost: 4.5,
-      timeline: "4-6 weeks",
-      riskReduction: 82,
-      revenueProtection: 88,
-      feasibility: "HIGH",
-      pros: ["Diversified supply base", "Proven qualification process", "Long-term resilience"],
-      cons: ["Higher unit costs", "Regulatory re-qualification needed", "Lead time for medical-grade validation"]
-    },
-    {
-      id: "inventory-buffer",
-      name: "Strategic Safety Stock",
-      description: "Increase safety stock for critical medical-grade components",
-      cost: 3.2,
-      timeline: "1-2 weeks",
-      riskReduction: 72,
-      revenueProtection: 85,
-      feasibility: "HIGH",
-      pros: ["Immediate protection", "Simple to implement", "No quality risk"],
-      cons: ["Capital intensive", "Warehouse capacity needed", "Obsolescence risk"]
-    },
-    {
-      id: "production-shift",
-      name: "Production Line Reallocation",
-      description: "Shift production capacity to unaffected manufacturing facilities",
-      cost: 1.8,
-      timeline: "6-8 weeks",
-      riskReduction: 58,
-      revenueProtection: 72,
-      feasibility: "MEDIUM",
-      pros: ["Cost effective", "Utilizes existing validated facilities"],
-      cons: ["Regulatory transfer validation", "Limited spare capacity", "Complex logistics"]
-    },
-    {
-      id: "product-prioritization",
-      name: "Product Portfolio Prioritization",
-      description: "Prioritize high-margin and life-critical product lines",
-      cost: 0.5,
-      timeline: "1 week",
-      riskReduction: 35,
-      revenueProtection: 55,
-      feasibility: "HIGH",
-      pros: ["Minimal cost", "Rapid execution", "Protects critical care products"],
-      cons: ["Revenue impact on deprioritized lines", "Customer relationship risk"]
-    }
-  ];
-
-  const aiRecommendation = {
-    strategy: "alternative-sourcing",
-    confidence: 89,
-    reasoning: "Given the critical severity and €18M revenue impact on MRI system deliveries, alternative sourcing provides the best long-term risk reduction (82%) with strong revenue protection (88%). The 4-6 week timeline aligns with current safety stock buffer. Medical-grade qualification can leverage existing FDA/CE documentation.",
-    keyFactors: [
-      "Critical impact on life-saving medical equipment",
-      "High revenue concentration risk in single geography",
-      "Existing pre-qualified suppliers in South Korea available",
-      "Regulatory documentation can be expedited via fast-track process"
-    ]
-  };
-
-  // Comprehensive overview data
-  const affectedProducts = [
-    { name: "Ingenia Ambition 1.5T", units: 8, revenue: "€4.8M", status: "delayed" },
-    { name: "Ingenia Elition 3.0T", units: 6, revenue: "€7.2M", status: "at-risk" },
-    { name: "MR 5300", units: 4, revenue: "€2.4M", status: "monitoring" },
-    { name: "Incisive CT", units: 3, revenue: "€2.1M", status: "delayed" },
-    { name: "IntelliVue MX800", units: 3, revenue: "€1.5M", status: "monitoring" },
-  ];
-
-  const timelineEvents = [
-    { date: "Feb 15", event: "TSMC allocation cut announced", type: "trigger" },
-    { date: "Feb 22", event: "Safety stock buffer activated", type: "action" },
-    { date: "Mar 1", event: "Samsung Foundry qualification started", type: "action" },
-    { date: "Mar 6", event: "Current date – 14-week buffer remaining", type: "current" },
-    { date: "Apr 15", event: "Projected stockout if no action", type: "risk" },
-    { date: "May 1", event: "Samsung qualification expected complete", type: "milestone" },
-  ];
-
-  const supplierRiskData = [
-    { name: "TSMC (Primary)", share: 65, risk: "Critical" },
-    { name: "Samsung Foundry", share: 20, risk: "Low" },
-    { name: "GlobalFoundries", share: 10, risk: "Medium" },
-    { name: "Others", share: 5, risk: "Low" },
-  ];
-
-  const impactByRegion = [
-    { region: "Europe", revenue: 8.2, systems: 10, percentage: 45 },
-    { region: "North America", revenue: 5.4, systems: 8, percentage: 30 },
-    { region: "APAC", revenue: 3.2, systems: 4, percentage: 18 },
-    { region: "LATAM", revenue: 1.2, systems: 2, percentage: 7 },
-  ];
-
-  const weeklyTrendData = [
-    { week: "W1", riskScore: 4.2, inventoryWeeks: 18, deliveryDelay: 0 },
-    { week: "W2", riskScore: 5.1, inventoryWeeks: 16, deliveryDelay: 1 },
-    { week: "W3", riskScore: 6.4, inventoryWeeks: 16, deliveryDelay: 2 },
-    { week: "W4", riskScore: 7.8, inventoryWeeks: 14, deliveryDelay: 3 },
-    { week: "W5 (Now)", riskScore: 8.2, inventoryWeeks: 14, deliveryDelay: 4 },
-    { week: "W6 (Proj)", riskScore: 8.8, inventoryWeeks: 12, deliveryDelay: 6 },
-    { week: "W7 (Proj)", riskScore: 9.1, inventoryWeeks: 10, deliveryDelay: 8 },
-    { week: "W8 (Proj)", riskScore: 9.5, inventoryWeeks: 8, deliveryDelay: 10 },
-  ];
+  // Load contextual data based on alert title
+  const contextData = getAlertContextData(alert.title);
+  const strategyOptions = contextData.strategyOptions;
+  const aiRecommendation = contextData.aiRecommendation;
+  const affectedProducts = contextData.affectedProducts;
+  const timelineEvents = contextData.timelineEvents;
+  const supplierRiskData = contextData.supplierRiskData;
+  const impactByRegion = contextData.impactByRegion;
+  const weeklyTrendData = contextData.weeklyTrendData;
 
   const PIE_COLORS = ["hsl(0, 84%, 60%)", "hsl(152, 69%, 36%)", "hsl(38, 92%, 50%)", "hsl(210, 18%, 75%)"];
 
@@ -176,7 +70,7 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
 
   const runSimulation = () => {
     if (selectedStrategies.length === 0) return;
-    const baseRevenueLoss = 18;
+    const baseRevenueLoss = contextData.revenueAtRisk;
     const results = selectedStrategies.map(strategyId => {
       const strategy = strategyOptions.find(s => s.id === strategyId);
       if (!strategy) return null;
@@ -299,7 +193,7 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
 
   // AI Insights cost/ROI data for all strategies
   const aiCostAnalysis = strategyOptions.map(s => {
-    const protectedRev = 18 * (s.revenueProtection / 100);
+    const protectedRev = contextData.revenueAtRisk * (s.revenueProtection / 100);
     const roi = ((protectedRev - s.cost) / s.cost) * 100;
     const netBenefit = protectedRev - s.cost;
     const monthlyProtection = protectedRev / 12;
@@ -358,7 +252,7 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <DollarSign className="h-4 w-4 text-critical" />
                   <span className="text-xs font-medium text-muted-foreground">Revenue at Risk</span>
                 </div>
-                <p className="text-2xl font-bold text-critical">€18M</p>
+                <p className="text-2xl font-bold text-critical">€{contextData.revenueAtRisk}M</p>
                 <p className="text-xs text-muted-foreground mt-1">Across {affectedProducts.reduce((sum, p) => sum + p.units, 0)} systems</p>
               </CardContent>
             </Card>
@@ -368,8 +262,8 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <Clock className="h-4 w-4 text-high" />
                   <span className="text-xs font-medium text-muted-foreground">Time to Impact</span>
                 </div>
-                <p className="text-2xl font-bold text-high">8 weeks</p>
-                <p className="text-xs text-muted-foreground mt-1">Projected stockout date: Apr 15</p>
+                <p className="text-2xl font-bold text-high">{contextData.timeToImpact}</p>
+                <p className="text-xs text-muted-foreground mt-1">Projected stockout date: {contextData.stockoutDate}</p>
               </CardContent>
             </Card>
             <Card className="border-warning/20 bg-warning/5">
@@ -378,8 +272,8 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <Package className="h-4 w-4 text-warning" />
                   <span className="text-xs font-medium text-muted-foreground">Safety Stock Buffer</span>
                 </div>
-                <p className="text-2xl font-bold text-warning">14 weeks</p>
-                <p className="text-xs text-muted-foreground mt-1">Depleting at 1.5 weeks/week</p>
+                <p className="text-2xl font-bold text-warning">{contextData.safetyStockWeeks} weeks</p>
+                <p className="text-xs text-muted-foreground mt-1">{contextData.depletionRate}</p>
               </CardContent>
             </Card>
             <Card>
@@ -388,8 +282,8 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <Activity className="h-4 w-4 text-muted-foreground" />
                   <span className="text-xs font-medium text-muted-foreground">Risk Score</span>
                 </div>
-                <p className="text-2xl font-bold text-foreground">8.2<span className="text-sm font-normal text-muted-foreground">/10</span></p>
-                <p className="text-xs text-critical mt-1">↑ 4.0 from 4 weeks ago</p>
+                <p className="text-2xl font-bold text-foreground">{contextData.riskScore}<span className="text-sm font-normal text-muted-foreground">/10</span></p>
+                <p className="text-xs text-critical mt-1">{contextData.riskDelta}</p>
               </CardContent>
             </Card>
           </div>
@@ -414,22 +308,12 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                 <div>
                   <h4 className="font-medium text-foreground mb-3">Root Cause Analysis</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Primary Cause</p>
-                      <p className="text-sm font-medium text-foreground">Consumer electronics demand surge (+40% YoY) consuming medical-grade fab capacity</p>
-                    </div>
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Contributing Factor</p>
-                      <p className="text-sm font-medium text-foreground">Geopolitical tensions increasing supply concentration risk in Taiwan</p>
-                    </div>
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Dependency Risk</p>
-                      <p className="text-sm font-medium text-foreground">65% of medical-grade ASICs sourced from single fab (TSMC N7 process)</p>
-                    </div>
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Regulatory Impact</p>
-                      <p className="text-sm font-medium text-foreground">Alternative suppliers require 8-12 week FDA/CE re-qualification cycle</p>
-                    </div>
+                    {contextData.rootCauses.map((cause, idx) => (
+                      <div key={idx} className="bg-muted/20 p-3 rounded-md">
+                        <p className="text-xs text-muted-foreground mb-1">{cause.label}</p>
+                        <p className="text-sm font-medium text-foreground">{cause.description}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </CardContent>
@@ -1040,11 +924,9 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                 <div>
                   <h4 className="font-medium text-foreground mb-3">Cost Breakdown</h4>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span className="text-muted-foreground">Supplier qualification</span><span className="font-medium">€1.8M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Regulatory fast-track</span><span className="font-medium">€0.9M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Logistics setup</span><span className="font-medium">€0.6M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Quality validation</span><span className="font-medium">€0.8M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Contingency (10%)</span><span className="font-medium">€0.4M</span></div>
+                    {contextData.costBreakdown.map((item, idx) => (
+                      <div key={idx} className="flex justify-between"><span className="text-muted-foreground">{item.label}</span><span className="font-medium">{item.amount}</span></div>
+                    ))}
                     <Separator />
                     <div className="flex justify-between font-bold"><span>Total</span><span>€{recommendedStrategy.cost}M</span></div>
                   </div>
@@ -1052,9 +934,9 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                 <div>
                   <h4 className="font-medium text-foreground mb-3">Revenue Impact</h4>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span className="text-muted-foreground">Revenue at risk</span><span className="font-medium text-critical">€18.0M</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Revenue at risk</span><span className="font-medium text-critical">€{contextData.revenueAtRisk.toFixed(1)}M</span></div>
                     <div className="flex justify-between"><span className="text-muted-foreground">Revenue protected ({recommendedStrategy.revenueProtection}%)</span><span className="font-medium text-success">€{recommendedStrategy.protectedRevenue.toFixed(1)}M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Residual risk</span><span className="font-medium text-warning">€{(18 - recommendedStrategy.protectedRevenue).toFixed(1)}M</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Residual risk</span><span className="font-medium text-warning">€{(contextData.revenueAtRisk - recommendedStrategy.protectedRevenue).toFixed(1)}M</span></div>
                     <Separator />
                     <div className="flex justify-between"><span className="text-muted-foreground">Net benefit</span><span className="font-bold text-success">€{recommendedStrategy.netBenefit.toFixed(1)}M</span></div>
                     <div className="flex justify-between"><span className="text-muted-foreground">Return on investment</span><span className="font-bold text-primary">{recommendedStrategy.roi.toFixed(0)}%</span></div>
