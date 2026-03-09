@@ -262,8 +262,8 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <Clock className="h-4 w-4 text-high" />
                   <span className="text-xs font-medium text-muted-foreground">Time to Impact</span>
                 </div>
-                <p className="text-2xl font-bold text-high">8 weeks</p>
-                <p className="text-xs text-muted-foreground mt-1">Projected stockout date: Apr 15</p>
+                <p className="text-2xl font-bold text-high">{contextData.timeToImpact}</p>
+                <p className="text-xs text-muted-foreground mt-1">Projected stockout date: {contextData.stockoutDate}</p>
               </CardContent>
             </Card>
             <Card className="border-warning/20 bg-warning/5">
@@ -272,8 +272,8 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <Package className="h-4 w-4 text-warning" />
                   <span className="text-xs font-medium text-muted-foreground">Safety Stock Buffer</span>
                 </div>
-                <p className="text-2xl font-bold text-warning">14 weeks</p>
-                <p className="text-xs text-muted-foreground mt-1">Depleting at 1.5 weeks/week</p>
+                <p className="text-2xl font-bold text-warning">{contextData.safetyStockWeeks} weeks</p>
+                <p className="text-xs text-muted-foreground mt-1">{contextData.depletionRate}</p>
               </CardContent>
             </Card>
             <Card>
@@ -282,8 +282,8 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <Activity className="h-4 w-4 text-muted-foreground" />
                   <span className="text-xs font-medium text-muted-foreground">Risk Score</span>
                 </div>
-                <p className="text-2xl font-bold text-foreground">8.2<span className="text-sm font-normal text-muted-foreground">/10</span></p>
-                <p className="text-xs text-critical mt-1">↑ 4.0 from 4 weeks ago</p>
+                <p className="text-2xl font-bold text-foreground">{contextData.riskScore}<span className="text-sm font-normal text-muted-foreground">/10</span></p>
+                <p className="text-xs text-critical mt-1">{contextData.riskDelta}</p>
               </CardContent>
             </Card>
           </div>
