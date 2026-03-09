@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import MetricsCard from "@/components/MetricsCard";
 import AlertCard from "@/components/AlertCard";
 import AlertDrilldown from "@/components/AlertDrilldown";
+import SuezRoutingDrilldown from "@/components/SuezRoutingDrilldown";
 import NavigationTabs from "@/components/NavigationTabs";
 import { AlertTriangle, Clock, Shield, TrendingUp } from "lucide-react";
 
