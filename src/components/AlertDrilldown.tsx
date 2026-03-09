@@ -308,22 +308,12 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                 <div>
                   <h4 className="font-medium text-foreground mb-3">Root Cause Analysis</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Primary Cause</p>
-                      <p className="text-sm font-medium text-foreground">Consumer electronics demand surge (+40% YoY) consuming medical-grade fab capacity</p>
-                    </div>
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Contributing Factor</p>
-                      <p className="text-sm font-medium text-foreground">Geopolitical tensions increasing supply concentration risk in Taiwan</p>
-                    </div>
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Dependency Risk</p>
-                      <p className="text-sm font-medium text-foreground">65% of medical-grade ASICs sourced from single fab (TSMC N7 process)</p>
-                    </div>
-                    <div className="bg-muted/20 p-3 rounded-md">
-                      <p className="text-xs text-muted-foreground mb-1">Regulatory Impact</p>
-                      <p className="text-sm font-medium text-foreground">Alternative suppliers require 8-12 week FDA/CE re-qualification cycle</p>
-                    </div>
+                    {contextData.rootCauses.map((cause, idx) => (
+                      <div key={idx} className="bg-muted/20 p-3 rounded-md">
+                        <p className="text-xs text-muted-foreground mb-1">{cause.label}</p>
+                        <p className="text-sm font-medium text-foreground">{cause.description}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </CardContent>
