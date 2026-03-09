@@ -193,7 +193,7 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
 
   // AI Insights cost/ROI data for all strategies
   const aiCostAnalysis = strategyOptions.map(s => {
-    const protectedRev = 18 * (s.revenueProtection / 100);
+    const protectedRev = contextData.revenueAtRisk * (s.revenueProtection / 100);
     const roi = ((protectedRev - s.cost) / s.cost) * 100;
     const netBenefit = protectedRev - s.cost;
     const monthlyProtection = protectedRev / 12;
