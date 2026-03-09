@@ -70,7 +70,7 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
 
   const runSimulation = () => {
     if (selectedStrategies.length === 0) return;
-    const baseRevenueLoss = 18;
+    const baseRevenueLoss = contextData.revenueAtRisk;
     const results = selectedStrategies.map(strategyId => {
       const strategy = strategyOptions.find(s => s.id === strategyId);
       if (!strategy) return null;
