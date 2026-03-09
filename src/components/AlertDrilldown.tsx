@@ -43,18 +43,6 @@ interface AlertDrilldownProps {
   onBack: () => void;
 }
 
-interface StrategyOption {
-  id: string;
-  name: string;
-  description: string;
-  cost: number;
-  timeline: string;
-  riskReduction: number;
-  revenueProtection: number;
-  feasibility: "HIGH" | "MEDIUM" | "LOW";
-  pros: string[];
-  cons: string[];
-}
 
 const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
   const [selectedStrategies, setSelectedStrategies] = useState<string[]>([]);
