@@ -252,7 +252,7 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                   <DollarSign className="h-4 w-4 text-critical" />
                   <span className="text-xs font-medium text-muted-foreground">Revenue at Risk</span>
                 </div>
-                <p className="text-2xl font-bold text-critical">€18M</p>
+                <p className="text-2xl font-bold text-critical">€{contextData.revenueAtRisk}M</p>
                 <p className="text-xs text-muted-foreground mt-1">Across {affectedProducts.reduce((sum, p) => sum + p.units, 0)} systems</p>
               </CardContent>
             </Card>
@@ -946,9 +946,9 @@ const AlertDrilldown = ({ alert, onBack }: AlertDrilldownProps) => {
                 <div>
                   <h4 className="font-medium text-foreground mb-3">Revenue Impact</h4>
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span className="text-muted-foreground">Revenue at risk</span><span className="font-medium text-critical">€18.0M</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Revenue at risk</span><span className="font-medium text-critical">€{contextData.revenueAtRisk.toFixed(1)}M</span></div>
                     <div className="flex justify-between"><span className="text-muted-foreground">Revenue protected ({recommendedStrategy.revenueProtection}%)</span><span className="font-medium text-success">€{recommendedStrategy.protectedRevenue.toFixed(1)}M</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">Residual risk</span><span className="font-medium text-warning">€{(18 - recommendedStrategy.protectedRevenue).toFixed(1)}M</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">Residual risk</span><span className="font-medium text-warning">€{(contextData.revenueAtRisk - recommendedStrategy.protectedRevenue).toFixed(1)}M</span></div>
                     <Separator />
                     <div className="flex justify-between"><span className="text-muted-foreground">Net benefit</span><span className="font-bold text-success">€{recommendedStrategy.netBenefit.toFixed(1)}M</span></div>
                     <div className="flex justify-between"><span className="text-muted-foreground">Return on investment</span><span className="font-bold text-primary">{recommendedStrategy.roi.toFixed(0)}%</span></div>
